@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "minesweeper game",
   "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
   "scripts": {
     "test": "jest"
   },
@@ -10,11 +13,17 @@
     "type": "git",
     "url": "git+https://github.com/kobi070/ts-react-course.git"
   },
-  "keywords": ["React", "Redux"],
+  "keywords": [
+    "React",
+    "Redux"
+  ],
   "author": "Kobi Kuzi",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kobi070/ts-react-course/issues"
   },
-  "homepage": "https://github.com/kobi070/ts-react-course#readme"
+  "homepage": "https://github.com/kobi070/ts-react-course#readme",
+  "devDependencies": {
+    "typescript": "^5.0.3"
+  }
 }
