@@ -10,6 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/kobi070/ts-react-course.git"
   },
+  "keywords": ["React", "Redux"],
   "author": "Kobi Kuzi",
   "license": "MIT",
   "bugs": {
