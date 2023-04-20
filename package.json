@@ -24,6 +24,12 @@
   },
   "homepage": "https://github.com/kobi070/ts-react-course#readme",
   "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.4",
+    "@types/jest": "^29.5.1",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "eslint": "^8.37.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
@@ -31,6 +37,12 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.32.2",
+    "jest-environment-jsdom": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "jest": "^29.5.0"
   }
 }
