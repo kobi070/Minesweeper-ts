@@ -18,18 +18,37 @@ describe("Field Generator", () => {
       ]);
     });
     it("3x3 with hidden fields", () => {
-      expect(emptyFieldGenerator(3)).toStrictEqual([
+      expect(emptyFieldGenerator(3, hidden)).toStrictEqual([
         [hidden, hidden, hidden],
         [hidden, hidden, hidden],
         [hidden, hidden, hidden],
       ]);
     });
-    it("simple cases", () => {
-        it("dencity tests", () => {
-            const errorText = "Dencity must be between 0 and 1";
-            expect(()=> fieldGenerator(1,-1)).toThrow(errorText)
-            expect(()=> fieldGenerator(1,2)).toThrow(errorText)
-        });
+    it("dencity tests", () => {
+      const errorText = "Dencity must be between 0 and 1";
+      console.log(empty);
+      expect(() => fieldGenerator(1, -1)).toThrow(errorText);
+      expect(() => fieldGenerator(1, 2)).toThrow(errorText);
+    });
+    it("Smallest possible field without mine", () => {
+      expect(fieldGenerator(1, 0)).toStrictEqual([[empty]]);
+    });
+    it("Biggest possible field without mine", () => {
+      expect(fieldGenerator(10, 0)).toStrictEqual([
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+        [empty, empty, empty, empty, empty, empty, empty, empty, empty, empty],
+      ]);
+    });
+    it("Smallest possible field with mine", () => {
+      expect(fieldGenerator(1, 1)).toStrictEqual([[bomb]]);
     });
   });
 });
