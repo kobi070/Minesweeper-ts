@@ -5,7 +5,7 @@ export type Coords = [number, number];
 export const CellState: Record<string, Cell> = {
   empty: 0,
   bomb: 9,
-  hiddens: 10,
+  hidden: 10,
   marked: 11,
   weakMark: 12,
 };
@@ -48,12 +48,12 @@ export const emptyFieldGenerator = (
  * @param {number} probability
  * @returns {Field}
  */
-export const fieldGenerator = (size: number, dencity: number): Field => {
+export const fieldGenerator = (size: number, probability: number): Field => {
   
-  if (dencity > 1 || dencity < 0) throw new Error("Dencity must be between 0 and 1");
+  if (probability > 1 || probability < 0) throw new Error("probability must be between 0 and 1");
   
   let unprocessedCells = size * size;
-  let restBombCells = unprocessedCells * dencity;
+  let restBombCells = unprocessedCells * probability;
   const result: Field = emptyFieldGenerator(size);
 
   for (let i = 0; i < size; i++) {

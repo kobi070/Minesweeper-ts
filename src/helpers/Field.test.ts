@@ -24,8 +24,8 @@ describe("Field Generator", () => {
         [hidden, hidden, hidden],
       ]);
     });
-    it("dencity tests", () => {
-      const errorText = "Dencity must be between 0 and 1";
+    it("probability tests", () => {
+      const errorText = "probability must be between 0 and 1";
       console.log(empty);
       expect(() => fieldGenerator(1, -1)).toThrow(errorText);
       expect(() => fieldGenerator(1, 2)).toThrow(errorText);
@@ -49,6 +49,26 @@ describe("Field Generator", () => {
     });
     it("Smallest possible field with mine", () => {
       expect(fieldGenerator(1, 1)).toStrictEqual([[bomb]]);
+    });
+    it("2x2 field with mine", () => {
+      const field = fieldGenerator(2, 1);
+      expect(field).toStrictEqual([
+        [bomb, bomb],
+        [bomb, bomb],
+      ]);
+    });
+    it("2x2 field with 50% probability for a mine", () => {
+      const field = fieldGenerator(2, 0.5);
+      const flatField = field.flat();
+
+      console.table(field);
+      console.table(flatField);
+
+      const cellsWithBombs = flatField.filter((cell) => cell === bomb);
+      const emptyCells = flatField.filter((cell) => cell === empty);
+
+      expect(cellsWithBombs).toHaveLength(2);
+      expect(emptyCells).toHaveLength(2);
     });
   });
 });
