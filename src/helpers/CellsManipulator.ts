@@ -1,11 +1,17 @@
 import { Cell, Coords, Field } from "./Field";
 
-export const incrementNeighbors = (coords: Coords, field: Field): Field => {
-  console.table(field);
-  return field;
-};
-
-export const getNeighborsItems = ([y, x]: Coords): Record<
+/**
+ * get the neighbors items
+ *
+ * Example incrementNeighbors([0, 0], field)
+ * [
+ *   [9, 0],
+ *   [0, 0],
+ * ]
+ *
+ * @param {Coords} coords
+ */
+export const getNeigboursItems = ([y, x]: Coords): Record<
   string,
   [number, number]
 > => ({
@@ -19,8 +25,33 @@ export const getNeighborsItems = ([y, x]: Coords): Record<
   leftTop: [y - 1, x - 1],
 });
 
+/**
+ * check if the item is in the field
+ * 
+ * Example checkItemInField([0,0])
+ * 
+ * @param {Coords} x inside coords
+ * @param {Coords} y inside coords
+ * @param {Field} length taking from field
+ * @returns {boolean} true if inside the field and false otherwise
+ */
+export const checkItemInField = ([y, x]: Coords, { length }: Field): boolean =>
+  y >= 0 && x >= 0 && length - x > 0 && length - y > 0;
 
-export const checkItemInField = (coords : Coords, field: Field): boolean => {
-    let answer = field[coords[0]][coords[1]] !== undefined;
-    return answer;
+
+export const incrementNeighbors = (coords: Coords, field: Field): Field => {
+  const items = getNeigboursItems(coords);
+
+  for (const item of Object.values(items)) {
+    if (checkItemInField(item, field)) {
+      const [y, x] = item;
+      const cell = field[y][x];
+
+      if (cell < 9) {
+        field[y][x] = (cell + 1) as Cell;
+      }
+    }
+  }
+
+  return field;
 };

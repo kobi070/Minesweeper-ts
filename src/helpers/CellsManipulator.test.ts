@@ -1,5 +1,9 @@
 import { CellState, Field } from "./Field";
-import { checkItemInField, incrementNeighbors } from "./CellsManipulator";
+import {
+  checkItemInField,
+  incrementNeighbors,
+  getNeigboursItems,
+} from "./CellsManipulator";
 
 const { bomb, empty } = CellState;
 
@@ -22,12 +26,52 @@ describe("Check CellsManipulator", () => {
         [1, 1],
       ]);
     });
+    it("Field 3x3 with 1 bomb ", () => {
+      expect(
+        incrementNeighbors(
+          [1, 1],
+          [
+            [0, 1, bomb],
+            [0, bomb, 1],
+            [0, 0, 0],
+          ]
+        )
+      ).toStrictEqual([
+        [1, 2, bomb],
+        [1, bomb, 2],
+        [1, 1, 1],
+      ]);
+    });
+    
+    
+    it("Field 9x9 with 1 bomb ", () => {});
   });
 });
 
-describe("Check getNeighborsItems", () => {
-  describe("simple getNeighborsItems cases", () => {
-    /* Add tests  */
+describe("Check neigbours selectors", () => {
+  it("With [0, 0] coords", () => {
+    expect(getNeigboursItems([0, 0])).toStrictEqual({
+      top: [-1, 0],
+      topRight: [-1, 1],
+      right: [0, 1],
+      rightBottom: [1, 1],
+      bottom: [1, 0],
+      bottomLeft: [1, -1],
+      left: [0, -1],
+      leftTop: [-1, -1],
+    });
+  });
+  it("With [3, 3] coords", () => {
+    expect(getNeigboursItems([3, 3])).toStrictEqual({
+      top: [2, 3],
+      topRight: [2, 4],
+      right: [3, 4],
+      rightBottom: [4, 4],
+      bottom: [4, 3],
+      bottomLeft: [4, 2],
+      left: [3, 2],
+      leftTop: [2, 2],
+    });
   });
 });
 
@@ -36,7 +80,7 @@ describe("checkItemInField", () => {
     const field: Field = [[empty]];
 
     it("Out of y ranges", () => {
-      expect(checkItemInField([-1, 0], field)).toBe(true);
+      expect(checkItemInField([1, 0], field)).toBe(false);
     });
     it("Out of x ranges", () => {
       expect(checkItemInField([0, -1], field)).toBe(false);
