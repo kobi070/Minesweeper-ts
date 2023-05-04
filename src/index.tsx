@@ -5,4 +5,4 @@ import ReactDOM from 'react-dom';
 
 import { Legend } from './components/Legend';
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<Legend />, document.getElementById('root'))
