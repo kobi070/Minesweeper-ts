@@ -42,6 +42,22 @@ describe("Check CellsManipulator", () => {
         [1, 1, 1],
       ]);
     });
+    it("Field 3x3 with 1 bomb ", () => {
+      expect(
+        incrementNeighbors(
+          [1, 1],
+          [
+            [0, 0, 0],
+            [0, bomb, 0],
+            [0, 0, 0],
+          ]
+        )
+      ).toStrictEqual([
+        [1, 1, 1],
+        [1, bomb, 1],
+        [1, 1, 1],
+      ]);
+    });
     
     
     it("Field 9x9 with 1 bomb ", () => {});
