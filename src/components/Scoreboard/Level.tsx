@@ -9,7 +9,13 @@ export interface LevelProps {
 }
 
 export const Level: React.FC<LevelProps> = ({ children }) => (
-  <Select>{children}</Select>
+  <Select>
+    {children.map((item: string) => (
+      <Option key={item} value={item}>
+        {item}
+      </Option>
+    ))}
+  </Select>
 );
 
 const Select = styled.select`
@@ -22,9 +28,9 @@ const Select = styled.select`
 `;
 
 const Option = styled.option`
-    font-weight: normal;
-    display: block;
-    white-space: nowrap;
-    min-height: 1.2em;
-    padding: 0 0.2vw 0.2vw;
+  font-weight: normal;
+  display: block;
+  white-space: nowrap;
+  min-height: 1.2em;
+  padding: 0 0.2vw 0.2vw;
 `;
