@@ -1,39 +1,89 @@
 import React, { FC } from "react";
 import styled from "@emotion/styled";
-import { Cell as CellType, CellState } from "../../helpers/Field";
+import { Cell as CellType, CellState, Coords } from "../../helpers/Field";
 
 export interface CellProps {
+  /**
+   * Cell status based on CellState
+   */
   children: CellType;
+  /**
+   * Cell coordinates
+   */
+  coords: Coords;
+  /**
+   * onClick by cell handler
+   */
+  onClick: (coords: Coords) => void;
+  /**
+   * onContextMenu by handler
+   */
+  onContextMenu: (coords: Coords) => void;
 }
 
-export const Cell: FC<CellProps> = ({ children }) => {
+interface ComponentMapProps {
+  children: CellType;
+  onClick: (coords: Coords) => void;
+  onContextMenu: (coords: Coords) => void;
+};
+
+
+export const Cell: FC<CellProps> = ({ children, coords, ...data }) => {
+  const isActiveCell = [
+    CellState.hidden,
+    CellState.flag,
+    CellState.weakFlag,
+  ].includes(children);
+
+  const onClick = () => {
+    if(isActiveCell){
+      return  data.onClick(coords);
+    }
+  }
+
+  const onContextMenu = (elem: React.MouseEvent<HTMLElement>) => {
+    /**
+     * Prevent context menu by default
+     */
+    elem.preventDefault();
+    if(isActiveCell) {
+      return data.onContextMenu(coords);
+    };
+  };
+
+  const props = {
+    onClick,
+    onContextMenu,
+  };
+
   switch (children) {
     case CellState.empty:
-      return <RevealedFrame children={children} />;
+      return <RevealedFrame {...props} />;
     case CellState.bomb:
       return (
-        <BombFrame>
+        <BombFrame {...props}>
           <Bomb />
         </BombFrame>
       );
     case CellState.hidden:
-      return <ClosedFrame />;
+      return <ClosedFrame {...props} />;
     case CellState.flag:
       return (
-        <ClosedFrame>
+        <ClosedFrame {...props}>
           <Flag />;
         </ClosedFrame>
       );
     case CellState.weakFlag:
       return (
-        <ClosedFrame>
+        <ClosedFrame {...props}>
           <WeakFlag />;
         </ClosedFrame>
       );
     default:
-      return <RevealedFrame children={children} />;
+      return <RevealedFrame {...props}>{children}</RevealedFrame>;
   }
 };
+
 
 const ClosedFrame = styled.div`
   display: flex;
@@ -76,14 +126,6 @@ const RevealedFrame = styled(ClosedFrame)`
   }
 `;
 
-const EmptyFrame = styled(ClosedFrame)`
-  background-color: #dddddd;
-  cursor: default;
-  &:hover {
-    filter: brightness(1);
-  }
-`;
-
 const BombFrame = styled(ClosedFrame)`
   background-color: #ec433c;
 `;
@@ -106,3 +148,5 @@ const Flag = styled.div`
 const WeakFlag = styled(Flag)`
   border-left: 0.5vw solid #f19996;
 `;
+
+
