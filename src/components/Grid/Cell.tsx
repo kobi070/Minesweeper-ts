@@ -1,10 +1,13 @@
-import React, { FC } from "react";
-import styled from "@emotion/styled";
-import { Cell as CellType, CellState, Coords } from "../../helpers/Field";
+import React, { FC } from 'react';
+import styled from '@emotion/styled';
+
+import { Cell as CellType, Coords, CellState } from '@/helpers/Field';
+
+import { useMouseDown } from '../../hooks/useMouseDown';
 
 export interface CellProps {
   /**
-   * Cell status based on CellState
+   * Cell status based on the CellType
    */
   children: CellType;
   /**
@@ -16,76 +19,93 @@ export interface CellProps {
    */
   onClick: (coords: Coords) => void;
   /**
-   * onContextMenu by handler
+   * onContextMenu by cell handler
    */
   onContextMenu: (coords: Coords) => void;
 }
 
-interface ComponentMapProps {
-  children: CellType;
-  onClick: (coords: Coords) => void;
-  onContextMenu: (coords: Coords) => void;
-};
+export const isActiveCell = (cell: CellType): boolean =>
+  [CellState.hidden, CellState.flag, CellState.weakFlag].includes(cell);
 
+export const Cell: FC<CellProps> = ({ children, coords, ...rest }) => {
+  const [mouseDown, onMouseDown, onMouseUp] = useMouseDown();
 
-export const Cell: FC<CellProps> = ({ children, coords, ...data }) => {
-  const isActiveCell = [
-    CellState.hidden,
-    CellState.flag,
-    CellState.weakFlag,
-  ].includes(children);
-
-  const onClick = () => {
-    if(isActiveCell){
-      return  data.onClick(coords);
-    }
-  }
+  const onClick = () => rest.onClick(coords);
 
   const onContextMenu = (elem: React.MouseEvent<HTMLElement>) => {
     /**
      * Prevent context menu by default
      */
     elem.preventDefault();
-    if(isActiveCell) {
-      return data.onContextMenu(coords);
-    };
+
+    if (isActiveCell(children)) {
+      rest.onContextMenu(coords);
+    }
   };
 
   const props = {
     onClick,
     onContextMenu,
+    onMouseDown,
+    onMouseUp,
+    onMouseLeave: onMouseUp,
+    mouseDown,
+    'data-testid': `${children}_${coords}`,
+  };
+
+  return <ComponentsMap {...props}>{children}</ComponentsMap>;
+};
+
+interface ComponentsMapProps {
+  children: CellType;
+  onClick: (elem: React.MouseEvent<HTMLElement>) => void;
+  onContextMenu: (elem: React.MouseEvent<HTMLElement>) => void;
+  onMouseDown: () => void;
+  onMouseUp: () => void;
+  onMouseLeave: () => void;
+  mouseDown: boolean;
+  'data-testid'?: string;
+}
+
+const ComponentsMap: FC<ComponentsMapProps> = ({ children, ...rest }) => {
+  const nonActiveCellProps = {
+    onContextMenu: rest.onContextMenu,
+    'data-testid': rest['data-testid'],
   };
 
   switch (children) {
     case CellState.empty:
-      return <RevealedFrame {...props} />;
+      return <RevealedFrame {...nonActiveCellProps} />;
     case CellState.bomb:
       return (
-        <BombFrame {...props}>
+        <BombFrame {...nonActiveCellProps}>
           <Bomb />
         </BombFrame>
       );
     case CellState.hidden:
-      return <ClosedFrame {...props} />;
+      return <ClosedFrame {...rest} />;
     case CellState.flag:
       return (
-        <ClosedFrame {...props}>
-          <Flag />;
+        <ClosedFrame {...rest}>
+          <Flag />
         </ClosedFrame>
       );
     case CellState.weakFlag:
       return (
-        <ClosedFrame {...props}>
-          <WeakFlag />;
+        <ClosedFrame {...rest}>
+          <WeakFlag />
         </ClosedFrame>
       );
     default:
-      return <RevealedFrame {...props}>{children}</RevealedFrame>;
+      return <RevealedFrame {...nonActiveCellProps}>{children}</RevealedFrame>;
   }
 };
 
+interface ClosedFrameProps {
+  mouseDown?: boolean;
+}
 
-const ClosedFrame = styled.div`
+const ClosedFrame = styled.div<ClosedFrameProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,30 +113,32 @@ const ClosedFrame = styled.div`
   cursor: pointer;
   width: 1.8vw;
   height: 1.8vw;
-  background-color: #d5d1d1;
+  background-color: #d1d1d1;
   border: 0.6vh solid transparent;
-  border-color: white #9e9e9e #9e9e9e white;
+  border-color: ${({ mouseDown = false }) =>
+    mouseDown ? 'transparent' : 'white #9e9e9e #9e9e9e white'};
   &:hover {
     filter: brightness(1.1);
   }
 `;
 
-const transparent = "rgba(0, 0, 0, 0)";
+const transparent = 'rgba(0,0,0,0)';
 const colors: { [key in CellType]: string } = {
-  0: transparent,
-  1: "#2a48ec",
-  2: "#2bb13d",
-  3: "#ec6561",
-  4: "#233db7",
-  5: "#a6070f",
-  6: "#e400af",
-  7: "#906a02",
-  8: "#fa0707",
+  0: '#000',
+  1: '#2a48ec',
+  2: '#2bb13d',
+  3: '#ec6561',
+  4: '#233db7',
+  5: '#a6070f',
+  6: '#e400af',
+  7: '#906a02',
+  8: '#fa0707',
   9: transparent,
   10: transparent,
   11: transparent,
   12: transparent,
 };
+
 const RevealedFrame = styled(ClosedFrame)`
   border-color: #dddddd;
   cursor: default;
@@ -126,10 +148,6 @@ const RevealedFrame = styled(ClosedFrame)`
   }
 `;
 
-const BombFrame = styled(ClosedFrame)`
-  background-color: #ec433c;
-`;
-
 const Bomb = styled.div`
   border-radius: 50%;
   width: 1vw;
@@ -137,16 +155,18 @@ const Bomb = styled.div`
   background-color: #333;
 `;
 
+const BombFrame = styled(RevealedFrame)`
+  background-color: #ec433c;
+`;
+
 const Flag = styled.div`
   width: 0px;
   height: 0px;
   border-top: 0.5vw solid transparent;
   border-bottom: 0.5vw solid transparent;
-  border-left: 0.5vw solid #ec443c;
+  border-left: 0.5vw solid #ec433c;
 `;
 
 const WeakFlag = styled(Flag)`
   border-left: 0.5vw solid #f19996;
 `;
-
-
