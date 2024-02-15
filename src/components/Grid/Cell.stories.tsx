@@ -1,12 +1,14 @@
-import React from "react";
-import { StoryFn, Meta } from "@storybook/react";
+import React from 'react';
+import { StoryFn, Meta } from '@storybook/react';
 
-import { Cell, CellProps } from "./Cell";
+import { Cell, CellProps } from './Cell';
 
 export default {
-  title: "Grid/Cell",
-  components: Cell,
-  tags: ["autodocs"],
+  title: 'Grid/Cell',
+  component: Cell,
+  argTypes: {
+    coords: { defaultValue: [1, 1] },
+  },
 } as Meta;
 
 const Template: StoryFn<CellProps> = (args) => <Cell {...args} />;
@@ -16,8 +18,8 @@ CellClosed.args = {
   children: 10,
 };
 
-export const CellEmpty = Template.bind({});
-CellEmpty.args = {
+export const CellIsEmpty = Template.bind({});
+CellIsEmpty.args = {
   children: 0,
 };
 
@@ -31,18 +33,14 @@ CellWithFlag.args = {
   children: 11,
 };
 
-export const CellWithWeakFlag = Template.bind({});
-CellWithWeakFlag.args = {
+export const CellWeakFlag = Template.bind({});
+CellWeakFlag.args = {
   children: 12,
 };
 
 export const CellWith1 = Template.bind({});
 CellWith1.args = {
   children: 1,
-};
-export const CellWith2 = Template.bind({});
-CellWith2.args = {
-  children: 2,
 };
 
 export const CellWith3 = Template.bind({});
@@ -54,8 +52,8 @@ export const CellWith5 = Template.bind({});
 CellWith5.args = {
   children: 5,
 };
-export const CellWith6 = Template.bind({});
-CellWith6.args = {
-  children: 6,
-};
 
+export const CellWith8 = Template.bind({});
+CellWith8.args = {
+  children: 8,
+};
