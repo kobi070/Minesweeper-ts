@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
-import { useMouseDown } from "@/hooks/useMouseDown";
+import { useMouseDown } from "../../hooks/useMouseDown";
 
 export interface ResetProps {
   /**
