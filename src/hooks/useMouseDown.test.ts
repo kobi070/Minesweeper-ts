@@ -1,9 +1,9 @@
-import { renderHook, act } from '@testing-library/react-hooks';
+import { renderHook, act } from "@testing-library/react-hooks";
 
-import { useMouseDown } from './useMouseDown';
+import { useMouseDown } from "./useMouseDown";
 
-describe('useMousedown hook test', () => {
-  it('Should toggle state after onMouseDown/onMouseUp calls', () => {
+describe("useMousedown hook test", () => {
+  it("Should toggle state after onMouseDown/onMouseUp calls", () => {
     const { result } = renderHook(useMouseDown);
 
     const [mousedown, onMouseDown, onMouseUp] = result.current;
